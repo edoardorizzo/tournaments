@@ -1,9 +1,9 @@
-import logo from './logo.svg';
+import HomePage from "./pages/HomePage";
 
 function App() {
   return (
     <div className="App">
-      <img src={logo} alt={logo}></img>
+      <HomePage></HomePage>
     </div>
   );
 }

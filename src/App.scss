@@ -1,0 +1,65 @@
+// colors
+
+$dark_grey: #2C302E;
+$grey: #474A48;
+$light_grey: #909590;
+$light_green:  #9AE19D;
+$green: #537A5A;
+$white: #ffffff;
+
+$green_gradient: linear-gradient(180deg, $light_green 0%, $green 100%);
+
+// font
+
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@300;400;500;700;900&display=swap');
+
+h1, 
+h2, 
+h3,
+h4,
+h5 {
+  color: $white;
+  margin: 0;
+}
+//
+
+body {
+  background-color: $dark_grey;
+  font-family: Commissioner;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// buttons
+
+.primary_button{
+  background-color: $light_green;
+  border-radius: 8px;
+  height: 40px;
+  color: $white;
+  font-weight: 600;
+  border: none;
+}
+
+// header
+
+header{
+  margin-bottom: 32px;
+}
+
+// start match comp
+
+.background_start_match{
+  background-color: $grey;
+  padding: 16px;
+  border-radius: 8px;
+
+  h3{
+    margin-bottom: 16px;
+  }
+
+  button{
+    width: 100%;
+  }
+}
