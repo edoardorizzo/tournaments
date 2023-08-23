@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for, jsonify
+import json
+from flask import Flask, request, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -31,7 +32,8 @@ def home():
 @app.route('/tournaments', methods=['POST'])
 def create_tournament():
     try:
-        tournament_name_json = request.get_json()
+        tournament = json.loads(request.get_json())
+        tournament_name = tournament['name']
         create_tournament_table_class(table_name=tournament_name)
         db.create_all()
         response_data = {'message': 'Data received successfully.'}
@@ -42,9 +44,20 @@ def create_tournament():
 
 @app.route('/players', methods=['GET', 'POST'])
 def add_player():
-    player_name = request.form.get('player')
-    db.session.add(player_name)
-    db.session.commit()
+    try:
+        data = json.loads(request.get_json())
+        tournament_name = data['tournament']['name']
+        player_names = data['players']
+        for player_name in player_names:
+            player = tournament_name(
+                player=player_name
+            )
+            db.session.add(player)
+            db.session.commit()
+        response_data = {'message': 'Data received successfully'}
+        return jsonify(response_data), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 
 if __name__ == '__main__':
