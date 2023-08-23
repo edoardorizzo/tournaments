@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+
+<body>
+    <form id="contactForm" action="{{ url_for('create_tournament') }}" method="post">
+        <div class="form-floating">
+            <input class="form-control" id="tournament" type="text" name="tournament" placeholder="Enter the tournament name"
+                data-sb-validations="required" />
+            <label for="tournament">Name</label>
+            <div class="invalid-feedback" data-sb-feedback="name:required">A name is required.</div>
+        </div>
+        <br />
+        <button id="submit">Create</button>
+    </form>
+</body>
