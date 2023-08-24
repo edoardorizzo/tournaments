@@ -1,9 +1,16 @@
 import HomePage from "./pages/HomePage";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import TournamentNamePage from "./pages/TournamentNamePage";
 
 function App() {
   return (
     <div className="App">
-      <HomePage></HomePage>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage></HomePage>} />
+          <Route path="/tournament" element={<TournamentNamePage></TournamentNamePage>} />
+        </Routes>
+      </Router>
     </div>
   );
 }

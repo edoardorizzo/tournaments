@@ -1,10 +1,14 @@
-import React from "react";
+import React from 'react';
+import { Link } from "react-router-dom";
 
 function Button() {
   return (
-      <button className="primary_button">
-        New tournament
+    <Link to="/tournament">
+      <button className='primary_button'>
+        Start Tournament
       </button>
+    </Link>
+    
   );
 }
 

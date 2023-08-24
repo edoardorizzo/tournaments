@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from './Button'
 
+
 function StartMatchComp() {
   return (
     <div className='background_start_match'>
