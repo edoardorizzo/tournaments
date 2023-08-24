@@ -42,6 +42,24 @@ body {
   border: none;
 }
 
+// input
+
+input{
+  border: 1px solid $light_grey;
+  background-color: $dark_grey;
+}
+
+// paragraph
+
+p {
+  color: $white;
+  margin: 0;
+}
+
+.p-small{
+  font-size: 12px;
+}
+
 // header
 
 header{
