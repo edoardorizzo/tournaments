@@ -1,6 +1,7 @@
 import HomePage from "./pages/HomePage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import TournamentNamePage from "./pages/TournamentNamePage";
+import PlayerNamePage from "./pages/PlayerNamePage";
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage></HomePage>} />
           <Route path="/tournament" element={<TournamentNamePage></TournamentNamePage>} />
+          <Route path="/player" element={<PlayerNamePage></PlayerNamePage>} />
         </Routes>
       </Router>
     </div>

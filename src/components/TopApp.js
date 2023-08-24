@@ -1,14 +1,17 @@
 import React from 'react'
 import backArrow from "../assets/img/back_arrow.svg";
+import { Link } from 'react-router-dom';
 
 
-function TopApp() {
+function TopApp( {to, message} ) {
   return (
-    <div className="top_app d-flex align-items-center mb-4">
+    <div className="top_app d-flex align-items-center mt-3 mb-4">
+        <Link to={to}>
         <div className="arrow_container me-5">
           <img src={backArrow} alt={backArrow}></img>
         </div>
-        <h4>Tournament Name</h4>
+        </Link>
+        <h4>{message}</h4>
     </div>
   )
 }
