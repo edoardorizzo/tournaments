@@ -1,5 +1,5 @@
 import json
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -8,6 +8,11 @@ db = SQLAlchemy(app)
 
 
 def create_tournament_table_class(table_name: str):
+    """
+    Function to create multiple copies of the same table
+    :param table_name: (str) The name of the tournament which will be the name of the new table
+    :return: Instance(?) of the TournamentTable class
+    """
     class TournamentTable(db.Model):
         sql_table_name = table_name.lower().replace(' ', '_')
         __tablename__ = sql_table_name
@@ -26,9 +31,12 @@ db.create_all()
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    # Just placeholder code for home which shouldn't require anything specific at the moment
+    response_data = {'message': 'Data received successfully.'}
+    return jsonify(response_data), 200
 
 
+# Create empty tournament tables with custom name
 @app.route('/tournaments', methods=['POST'])
 def create_tournament():
     try:
@@ -42,11 +50,14 @@ def create_tournament():
         return jsonify({'error': str(e)}), 400
 
 
+# Add a list of players to existing tournament table
 @app.route('/players', methods=['GET', 'POST'])
 def add_player():
     try:
         data = json.loads(request.get_json())
-        tournament_name = data['tournament']['name']
+        # should the tournament name be provided with the json through the post request or should it be asked with a
+        # prior get request?
+        tournament_name = data['tournament']
         player_names = data['players']
         for player_name in player_names:
             player = tournament_name(
