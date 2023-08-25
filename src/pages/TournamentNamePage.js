@@ -7,11 +7,11 @@ import InputPlayer from "../components/InputPlayer";
 import Input from "../components/Input";
 import InputPlayerDelete from "../components/InputPlayerDelete";
 import inputCounter1 from "../assets/img/input_counter1/input_counter1.svg";
-import inputCounter2 from "../assets/img/input_counter1/input_counter2.svg";
-import inputCounter3 from "../assets/img/input_counter1/input_counter3.svg";
-import inputCounter4 from "../assets/img/input_counter1/input_counter4.svg";
 
 function TournamentNamePage() {
+  const [tournamentName, setTournamentName] = useState(""); // Stato per il nome del torneo
+  const [playerNames, setPlayerNames] = useState([]); // Stato per i nomi dei giocatori
+
   const [clickCount, setClickCount] = useState(1);
   const [addedPlayers, setAddedPlayers] = useState([]);
 
@@ -23,8 +23,22 @@ function TournamentNamePage() {
   };
 
   const removePlayer = (indexToRemove) => {
-    const updatedPlayers = addedPlayers.filter((_, index) => index !== indexToRemove);
+    const updatedPlayers = addedPlayers.filter(
+      (_, index) => index !== indexToRemove
+    );
     setAddedPlayers(updatedPlayers);
+  };
+
+  const createTournament = () => {
+    // Esempio di come puoi utilizzare i dati raccolti
+    const tournamentData = {
+      tournamentName,
+      playerNames,
+    };
+
+    console.log("Tournament data:", tournamentData);
+
+    // Qui puoi eseguire ulteriori azioni come inviare i dati al server, ecc.
   };
 
   return (
@@ -34,7 +48,10 @@ function TournamentNamePage() {
           <div className="top_content_container mb-5">
             <TopApp to="/" message="Create tournament" />
             <h4 className="mb-3">Insert tournament name</h4>
-            <Input />
+            <Input
+              value={tournamentName}
+              onChange={(e) => setTournamentName(e.target.value)}
+            />
             <InfoMessage caption="Ricordati di utilizzare nomi diversi così da non confonderti tra un torneo e l’altro, stupido Timothy. Questo campo è obbligatorio" />
           </div>
 
@@ -42,17 +59,38 @@ function TournamentNamePage() {
             <h4 className="mb-3">Insert players name</h4>
             <ul>
               <li>
-                <InputPlayer input={inputCounter1}></InputPlayer>
+                <InputPlayer
+                  input={inputCounter1}
+                  playerName={playerNames[0] || ""}
+                  onChange={(e) => {
+                    const updatedPlayerNames = [...playerNames];
+                    updatedPlayerNames[0] = e.target.value;
+                    setPlayerNames(updatedPlayerNames);
+                  }}
+                />
               </li>
               <li>
-                <InputPlayer input={inputCounter2}></InputPlayer>
+                <InputPlayer
+                  input={inputCounter1}
+                  playerName={playerNames[1] || ""}
+                  onChange={(e) => {
+                    const updatedPlayerNames = [...playerNames];
+                    updatedPlayerNames[1] = e.target.value;
+                    setPlayerNames(updatedPlayerNames);
+                  }}
+                />
               </li>
               {addedPlayers.map((player, index) => (
                 <li key={index}>
                   <InputPlayerDelete
-                    input={player.image}
-                    playerName={player.playerName}
+                    input={inputCounter1} // Assicurati di passare l'immagine corretta per il giocatore
+                    playerName={playerNames[index + 2] || ""}
                     onRemove={() => removePlayer(index)}
+                    onChange={(e) => {
+                      const updatedPlayerNames = [...playerNames];
+                      updatedPlayerNames[index + 2] = e.target.value;
+                      setPlayerNames(updatedPlayerNames);
+                    }}
                   />
                 </li>
               ))}
@@ -62,7 +100,7 @@ function TournamentNamePage() {
           </div>
         </div>
         <div className="bottom_element_container mb-3">
-          <Button text="Create tournament" />
+          <Button text="Create tournament" onClick={createTournament} />
         </div>
       </div>
     </div>
