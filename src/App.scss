@@ -52,6 +52,15 @@ body {
   font-weight: 600;
 }
 
+.secondary_button_small{
+  background-color: $dark_grey;
+  border: 1px solid $light_green;
+  border-radius: 8px;
+  height: 42px;
+  color: $light_green;
+  font-weight: 600;
+}
+
 // input
 
 input{

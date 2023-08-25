@@ -5,21 +5,26 @@ import Button from "../components/Button";
 import SecondaryButton from "../components/SecondaryButton";
 import InputPlayer from "../components/InputPlayer";
 import Input from "../components/Input";
+import InputPlayerDelete from "../components/InputPlayerDelete";
 import inputCounter1 from "../assets/img/input_counter1/input_counter1.svg";
 import inputCounter2 from "../assets/img/input_counter1/input_counter2.svg";
 import inputCounter3 from "../assets/img/input_counter1/input_counter3.svg";
 import inputCounter4 from "../assets/img/input_counter1/input_counter4.svg";
 
-
 function TournamentNamePage() {
-  const [players, setPlayers] = useState([inputCounter1, inputCounter2]);
   const [clickCount, setClickCount] = useState(1);
+  const [addedPlayers, setAddedPlayers] = useState([]);
 
   const addPlayer = () => {
     if (clickCount <= 18) {
-      setPlayers([...players, `inputCounter${clickCount + 2}`]);
+      setAddedPlayers([...addedPlayers, `inputCounter${clickCount + 2}`]);
       setClickCount(clickCount + 1);
     }
+  };
+
+  const removePlayer = (indexToRemove) => {
+    const updatedPlayers = addedPlayers.filter((_, index) => index !== indexToRemove);
+    setAddedPlayers(updatedPlayers);
   };
 
   return (
@@ -30,17 +35,25 @@ function TournamentNamePage() {
             <TopApp to="/" message="Create tournament" />
             <h4 className="mb-3">Insert tournament name</h4>
             <Input />
-            <InfoMessage
-              caption="Ricordati di utilizzare nomi diversi così da non confonderti tra un torneo e l’altro, stupido Timothy. Questo campo è obbligatorio"
-            />
+            <InfoMessage caption="Ricordati di utilizzare nomi diversi così da non confonderti tra un torneo e l’altro, stupido Timothy. Questo campo è obbligatorio" />
           </div>
 
           <div className="bottom_content_container mb-5">
             <h4 className="mb-3">Insert players name</h4>
             <ul>
-              {players.map((playerInput, index) => (
+              <li>
+                <InputPlayer input={inputCounter1}></InputPlayer>
+              </li>
+              <li>
+                <InputPlayer input={inputCounter2}></InputPlayer>
+              </li>
+              {addedPlayers.map((player, index) => (
                 <li key={index}>
-                  <InputPlayer input={playerInput} />
+                  <InputPlayerDelete
+                    input={player.image}
+                    playerName={player.playerName}
+                    onRemove={() => removePlayer(index)}
+                  />
                 </li>
               ))}
             </ul>
