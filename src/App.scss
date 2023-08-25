@@ -43,6 +43,15 @@ body {
   border: none;
 }
 
+.secondary_button{
+  background-color: $dark_grey;
+  border: 1px solid $light_green;
+  border-radius: 8px;
+  height: 40px;
+  color: $light_green;
+  font-weight: 600;
+}
+
 // input
 
 input{
