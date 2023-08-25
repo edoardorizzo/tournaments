@@ -1,14 +1,10 @@
 import React from 'react';
-import { Link } from "react-router-dom";
 
-function SecondaryButton({to, text}) {
+function SecondaryButton({ text, onClick }) {
   return (
-    <Link to={to}>
-      <button className='secondary_button w-100 mt-2'>
-        {text}
-      </button>
-    </Link>
-    
+    <button className='secondary_button w-100 mt-2' onClick={onClick}>
+      {text}
+    </button>
   );
 }
 
