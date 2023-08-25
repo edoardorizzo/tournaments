@@ -36,7 +36,7 @@ function TournamentNamePage() {
           </div>
         </div>
         <div className="bottom_element_container mb-3">
-          <Button text="Add tournament name"></Button>
+          <Button text="Create tournament"></Button>
         </div>
       </div>
     </div>
