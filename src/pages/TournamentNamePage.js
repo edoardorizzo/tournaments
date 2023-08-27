@@ -6,7 +6,7 @@ import SecondaryButton from "../components/SecondaryButton";
 import InputPlayer from "../components/InputPlayer";
 import Input from "../components/Input";
 import InputPlayerDelete from "../components/InputPlayerDelete";
-import inputCounter1 from "../assets/img/input_counter1/input_counter1.svg";
+import userIcon from "../assets/img/user-solid.svg";
 
 function TournamentNamePage() {
   const [tournamentName, setTournamentName] = useState(""); // Stato per il nome del torneo
@@ -60,7 +60,7 @@ function TournamentNamePage() {
             <ul>
               <li>
                 <InputPlayer
-                  input={inputCounter1}
+                  input={userIcon}
                   playerName={playerNames[0] || ""}
                   onChange={(e) => {
                     const updatedPlayerNames = [...playerNames];
@@ -71,8 +71,8 @@ function TournamentNamePage() {
               </li>
               <li>
                 <InputPlayer
-                  input={inputCounter1}
-                  playerName={playerNames[1] || ""}
+                  input={userIcon}
+                  playerName={playerNames.value || ""}
                   onChange={(e) => {
                     const updatedPlayerNames = [...playerNames];
                     updatedPlayerNames[1] = e.target.value;
@@ -83,7 +83,7 @@ function TournamentNamePage() {
               {addedPlayers.map((player, index) => (
                 <li key={index}>
                   <InputPlayerDelete
-                    input={inputCounter1} // Assicurati di passare l'immagine corretta per il giocatore
+                    input={userIcon} // Assicurati di passare l'immagine corretta per il giocatore
                     playerName={playerNames[index + 2] || ""}
                     onRemove={() => removePlayer(index)}
                     onChange={(e) => {
