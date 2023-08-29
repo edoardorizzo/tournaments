@@ -11,7 +11,7 @@ function TopApp( {to, message} ) {
           <img src={backArrow} alt={backArrow}></img>
         </div>
         </Link>
-        <h4>{message}</h4>
+        <h3>{message}</h3>
     </div>
   )
 }

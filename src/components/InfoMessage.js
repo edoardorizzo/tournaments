@@ -3,7 +3,7 @@ import infoIcon from '../assets/img/info_icon.svg';
 
 function InfoMessage( { caption }) {
   return (
-    <div className="d-flex justify-content-start align-items-center mb-4">
+    <div className="d-flex justify-content-start align-items-center">
         <div className="info_container me-3">
           <img src={infoIcon} alt={infoIcon}></img>
         </div>

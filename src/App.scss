@@ -43,12 +43,34 @@ body {
   border: none;
 }
 
+.secondary_button{
+  background-color: $dark_grey;
+  border: 1px solid $light_green;
+  border-radius: 8px;
+  height: 40px;
+  color: $light_green;
+  font-weight: 600;
+}
+
+.secondary_button_small{
+  background-color: $dark_grey;
+  border: 1px solid $light_green;
+  border-radius: 8px;
+  height: 42px;
+  color: $light_green;
+  font-weight: 600;
+}
+
 // input
 
 input{
   border: 1px solid $light_grey;
   background-color: $dark_grey;
   color: $white;
+}
+
+.input_user_container{
+  height: 40px;
 }
 
 // paragraph
@@ -60,6 +82,14 @@ p {
 
 .p-small{
   font-size: 12px;
+}
+
+// ul / li
+
+ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 // header
