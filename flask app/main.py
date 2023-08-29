@@ -70,7 +70,7 @@ def create_tournament():
                 player=player_name
             )
             db.session.add(player)
-            db.session.commit()
+        db.session.commit()
         response_data = {'message': 'Data received successfully.'}
         return jsonify(response_data), 200
     except Exception as e:

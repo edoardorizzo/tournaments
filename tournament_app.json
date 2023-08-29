@@ -1,0 +1,274 @@
+{
+  "uuid": "10b41831-9335-4fa1-af11-5433be0453ef",
+  "lastMigration": 28,
+  "name": "Tournament app",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "29a60221-b629-4800-884f-4dbf09dd1144",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "tournaments",
+      "responses": [
+        {
+          "uuid": "c90368b9-a7f1-47ed-bb8e-ea3a0214ca27",
+          "body": "[\n  {{#repeat 1 10}}\n  {\n    \"id\": {{int 0 100}},\n    \"name\": \"8 novembre 2023\",\n    \"date\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd'}}\"\n  }\n  {{/repeat}}\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "8936525b-3a92-4fc5-940a-7342e92d9e89",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "tournaments",
+      "responses": [
+        {
+          "uuid": "ea4040fa-4544-42e6-b24d-b19be689e1b2",
+          "body": "{\n  \"id\": {{int 1 100}},\n  \"name\": \"{{body 'name'}}\",\n  \"date\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd'}}\"\n}\n",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "4eb2995d-d973-457d-818b-ff359734a85d",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "players",
+      "responses": [
+        {
+          "uuid": "4b5516a3-2776-43b5-88c4-c7a431c21484",
+          "body": "[\n  {{#repeat 1 10}}\n  {\n    \"id\": {{int 0 100}},\n    \"name\": \"{{firstName}}\"\n  }\n  {{/repeat}}\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "04f56315-375a-4c74-8bd7-11906065f33c",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "players",
+      "responses": [
+        {
+          "uuid": "d0feae20-f676-4e38-94f9-42a8b24c7e32",
+          "body": "{\n  \"id\": {{int 1 100}},\n  \"name\": \"{{body 'name'}}\"\n}\n",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "be7e964a-aa40-4f07-b9b9-21a893610d11",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "tournaments/:tournament_id/players/:player_id",
+      "responses": [
+        {
+          "uuid": "db199c17-43f8-4945-a588-6c2ed62e0da8",
+          "body": "{\n  \"player_id\": {{urlParam 'player_id'}},\n  \"tournament_id\": {{urlParam 'tournament_id'}}\n}\n",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "cb92fff0-8f26-4795-8cea-369f954c9ec7",
+      "type": "http",
+      "documentation": "",
+      "method": "put",
+      "endpoint": "tournaments/:tournament_id",
+      "responses": [
+        {
+          "uuid": "e241d3b6-ad23-4378-9eaf-2a935efd7164",
+          "body": "{\n  \"id\": {{urlParam 'tournament_id'}},\n  \"name\": \"{{body 'name'}}\",\n  \"date\": \"{{dateFormat (faker 'date.recent') 'yyyy-MM-dd'}}\"\n}\n",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id"
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "29a60221-b629-4800-884f-4dbf09dd1144"
+    },
+    {
+      "type": "route",
+      "uuid": "8936525b-3a92-4fc5-940a-7342e92d9e89"
+    },
+    {
+      "type": "route",
+      "uuid": "4eb2995d-d973-457d-818b-ff359734a85d"
+    },
+    {
+      "type": "route",
+      "uuid": "04f56315-375a-4c74-8bd7-11906065f33c"
+    },
+    {
+      "type": "route",
+      "uuid": "be7e964a-aa40-4f07-b9b9-21a893610d11"
+    },
+    {
+      "type": "route",
+      "uuid": "cb92fff0-8f26-4795-8cea-369f954c9ec7"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": []
+}
