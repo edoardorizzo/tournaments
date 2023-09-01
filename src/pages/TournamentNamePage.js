@@ -96,7 +96,7 @@ function TournamentNamePage() {
           </div>
         </div>
         <div className="bottom_element_container mb-3">
-          <Button text="Create tournament" onClick={createTournament} />
+          <Button text="Create tournament" onClick={createTournament} to="/matches"/>
         </div>
       </div>
     </div>
