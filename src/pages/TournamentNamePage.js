@@ -10,7 +10,7 @@ import userIcon from "../assets/img/user-solid.svg";
 
 function TournamentNamePage() {
   const [tournamentName, setTournamentName] = useState(""); // Stato per il nome del torneo
-  const [playerNames, setPlayerNames] = useState([]); // Stato per i nomi dei giocatori
+  const [playerNames, setPlayerNames] = useState(["", ""]); // Stato per i nomi dei giocatori
 
   const [clickCount, setClickCount] = useState(1);
   const [addedPlayers, setAddedPlayers] = useState([]);
@@ -29,8 +29,14 @@ function TournamentNamePage() {
     setAddedPlayers(updatedPlayers);
   };
 
+  const handlePlayerNameChange = (index, value) => {
+    const updatedPlayerNames = [...playerNames];
+    updatedPlayerNames[index] = value;
+    setPlayerNames(updatedPlayerNames);
+  };
+
   const createTournament = () => {
-    // Esempio di come puoi utilizzare i dati raccolti
+    // Crea l'oggetto con i dati raccolti
     const tournamentData = {
       tournamentName,
       playerNames,
@@ -62,35 +68,25 @@ function TournamentNamePage() {
                 <InputPlayer
                   input={userIcon}
                   playerName={playerNames[0] || ""}
-                  onChange={(e) => {
-                    const updatedPlayerNames = [...playerNames];
-                    updatedPlayerNames[0] = e.target.value;
-                    setPlayerNames(updatedPlayerNames);
-                  }}
+                  onChange={(e) => handlePlayerNameChange(0, e.target.value)}
                 />
               </li>
               <li>
                 <InputPlayer
                   input={userIcon}
-                  playerName={playerNames.value || ""}
-                  onChange={(e) => {
-                    const updatedPlayerNames = [...playerNames];
-                    updatedPlayerNames[1] = e.target.value;
-                    setPlayerNames(updatedPlayerNames);
-                  }}
+                  playerName={playerNames[1] || ""}
+                  onChange={(e) => handlePlayerNameChange(1, e.target.value)}
                 />
               </li>
               {addedPlayers.map((player, index) => (
                 <li key={index}>
                   <InputPlayerDelete
-                    input={userIcon} // Assicurati di passare l'immagine corretta per il giocatore
+                    input={userIcon}
                     playerName={playerNames[index + 2] || ""}
                     onRemove={() => removePlayer(index)}
-                    onChange={(e) => {
-                      const updatedPlayerNames = [...playerNames];
-                      updatedPlayerNames[index + 2] = e.target.value;
-                      setPlayerNames(updatedPlayerNames);
-                    }}
+                    onChange={(e) =>
+                      handlePlayerNameChange(index + 2, e.target.value)
+                    }
                   />
                 </li>
               ))}
