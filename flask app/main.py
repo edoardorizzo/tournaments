@@ -37,6 +37,16 @@ def saved_players():
         return jsonify({'error': str(e)}), 500
 
 
+# Get list of saved tournaments
+@app.route('/tournaments/saved', methods=['GET'])
+def saved_tournaments():
+    try:
+        tournaments = flask_functions.get_saved_tournaments(db_table=Tournament)
+        return jsonify(tournaments)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 # The following routes are not yet implemented or actually useful
 
 

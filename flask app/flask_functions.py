@@ -1,5 +1,4 @@
 from flask import request
-from sqlalchemy import Null
 
 
 # Function for start_tournament()
@@ -50,6 +49,17 @@ def get_saved_players(db_table):
             player_dict = {'id': player.id, 'name': player.name}
             players.append(player_dict)
     return players
+
+
+# Function to get saved tournaments
+def get_saved_tournaments(db_table):
+    tournaments_objects = db_table.query.all()
+    tournaments = []
+    if len(tournaments_objects) > 0:
+        for tournament in tournaments_objects:
+            tournament_dict = {'id': tournament.id, 'name': tournament.name, 'date': tournament.date}
+            tournaments.append(tournament_dict)
+    return tournaments
 
 
 # All the following functions are working but not actually implemented into the app for now
