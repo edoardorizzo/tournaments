@@ -26,7 +26,7 @@ def start_tournament():
 def saved_players():
     try:
         players = flask_functions.get_saved_players(model=Player)
-        return jsonify(players)
+        return jsonify(players), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -36,7 +36,7 @@ def saved_players():
 def saved_tournaments():
     try:
         tournaments = flask_functions.get_saved_tournaments(model=Tournament)
-        return jsonify(tournaments)
+        return jsonify(tournaments), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -65,12 +65,24 @@ def first_round(tournament_id):
 
 
 # Save round results
-@app.route('/tournaments/<int:tournament_id>/rounds/<int:round_number>', methods=['POST', 'PUT'])
+@app.route('/tournaments/<int:tournament_id>/rounds/<int:round_number>', methods=['POST'])
 def post_results(tournament_id, round_number):
     try:
         response_data = flask_functions.save_round_results(db=db, tournament_id=tournament_id, player_table=Player,
-                                                           result_table=Result, tournament_result_table=TournamentResult)
+                                                           result_table=Result,
+                                                           tournament_result_table=TournamentResult)
         return jsonify(response_data), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# Get current results
+@app.route('/tournaments/<int:tournament_id>/ranking', methods=['GET'])
+def get_current_ranking(tournament_id):
+    try:
+        response_data = flask_functions.get_current_ranking(tournament_id=tournament_id,
+                                                            tournament_result_table=TournamentResult)
+        return jsonify(response_data), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

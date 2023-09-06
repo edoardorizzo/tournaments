@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey, event
+from pprint import pprint
 
 
 db = SQLAlchemy()
@@ -77,12 +78,53 @@ class TournamentResult(db.Model):
 
 
 # Event listener to update TournamentResult after Result
-@event.listens_for(Result, 'after_insert')
-def result_after_insert(mapper, connection, target):
-    new_results = target
-
-
-def process_results(new_results):
-    updates = {
-
-    }
+# @event.listens_for(Result, 'after_insert')
+# def result_after_insert(mapper, connection, target):
+#     new_results = target
+#     match = Match.query.get(new_results.match_id)
+#     tournament_id = match.tournament_id
+#     nested_transaction = db.session.begin_nested()
+#     if new_results.player_2_id is not None:
+#         player_1_object = Player.query.get(new_results.player_1_id)
+#         player_2_object = Player.query.get(new_results.player_2_id)
+#         tournament_result_objects = TournamentResult.query.filter_by(tournament_id=tournament_id).all()
+#         player_1_result_object = [item for item in tournament_result_objects
+#                                   if item.player_id == player_1_object.id]
+#         player_2_result_object = [item for item in tournament_result_objects
+#                                   if item.player_id == player_2_object.id]
+#         if new_results.player_1_wins > new_results.player_2_wins:
+#             player_1_result_object[0].points += 3
+#             player_1_result_object[0].matches_won += 1
+#             player_1_result_object[0].games_won += new_results.player_1_wins
+#             player_1_result_object[0].games_drawn += new_results.draws
+#             player_2_result_object[0].games_won += new_results.player_2_wins
+#             player_2_result_object[0].games_drawn += new_results.draws
+#         elif new_results.player_1_wins < new_results.player_2_wins:
+#             player_2_result_object[0].points += 3
+#             player_2_result_object[0].matches_won += 1
+#             player_2_result_object[0].games_won += new_results.player_2_wins
+#             player_2_result_object[0].games_drawn += new_results.draws
+#             player_1_result_object[0].games_won += new_results.player_1_wins
+#             player_1_result_object[0].games_drawn += new_results.draws
+#         else:
+#             player_1_result_object[0].points += 1
+#             player_2_result_object[0].points += 1
+#             player_1_result_object[0].matches_drawn += 1
+#             player_2_result_object[0].matches_drawn += 1
+#             player_1_result_object[0].games_won += new_results.player_1_wins
+#             player_1_result_object[0].games_drawn += new_results.draws
+#             player_2_result_object[0].games_won += new_results.player_2_wins
+#             player_2_result_object[0].games_drawn += new_results.draws
+#     else:
+#         player_1_object = Player.query.get(new_results.player_1_id)
+#         tournament_result_objects = TournamentResult.query.filter_by(tournament_id=tournament_id).all()
+#         player_1_result_object = [item for item in tournament_result_objects if
+#                                   item.player_id == player_1_object.id]
+#         player_1_result_object[0].points += 3
+#         player_1_result_object[0].matches_won += 1
+#         player_1_result_object[0].games_won += new_results.player_1_wins
+#     nested_transaction.commit()
+#
+#
+# def process_new_results(new_results):
+#     return

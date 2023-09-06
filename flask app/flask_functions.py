@@ -158,33 +158,57 @@ def save_round_results(db: sqlalchemy, tournament_id: int, player_table: sqlalch
             draws=match['draws']
         )
         db.session.add(match_data)
-        player_1_object = player_table.query.get(match['player_1_id'])
-        player_2_object = player_table.query.get(match['player_2_id'])
-        tournament_result_objects = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
-        player_1_result_object = [item for item in tournament_result_objects if item.player_id == player_1_object.id]
-        player_2_result_object = []
-        if player_2_object:
-            player_2_result_object = [item for item in tournament_result_objects if item.player_id == player_2_object.id]
-        if match['player_1_wins'] > match['player_2_wins']:
+        # TODO move this block of horrible code to a different module
+        if match['player_2_id'] is not None:
+            player_1_object = player_table.query.get(match['player_1_id'])
+            player_2_object = player_table.query.get(match['player_2_id'])
+            tournament_result_objects = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
+            player_1_result_object = [item for item in tournament_result_objects
+                                      if item.player_id == player_1_object.id]
+            player_2_result_object = [item for item in tournament_result_objects
+                                      if item.player_id == player_2_object.id]
+            if match['player_1_wins'] > match['player_2_wins']:
+                player_1_result_object[0].points += 3
+                player_1_result_object[0].matches_won += 1
+                player_1_result_object[0].games_won += match['player_1_wins']
+                player_1_result_object[0].games_drawn += match['draws']
+                player_2_result_object[0].games_won += match['player_2_wins']
+                player_2_result_object[0].games_drawn += match['draws']
+            elif match['player_1_wins'] < match['player_2_wins']:
+                player_2_result_object[0].points += 3
+                player_2_result_object[0].matches_won += 1
+                player_2_result_object[0].games_won += match['player_2_wins']
+                player_2_result_object[0].games_drawn += match['draws']
+                player_1_result_object[0].games_won += match['player_1_wins']
+                player_1_result_object[0].games_drawn += match['draws']
+            else:
+                player_1_result_object[0].points += 1
+                player_2_result_object[0].points += 1
+                player_1_result_object[0].matches_drawn += 1
+                player_2_result_object[0].matches_drawn += 1
+                player_1_result_object[0].games_won += match['player_1_wins']
+                player_1_result_object[0].games_drawn += match['draws']
+                player_2_result_object[0].games_won += match['player_2_wins']
+                player_2_result_object[0].games_drawn += match['draws']
+        else:
+            player_1_object = player_table.query.get(match['player_1_id'])
+            tournament_result_objects = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
+            player_1_result_object = [item for item in tournament_result_objects if
+                                      item.player_id == player_1_object.id]
             player_1_result_object[0].points += 3
             player_1_result_object[0].matches_won += 1
             player_1_result_object[0].games_won += match['player_1_wins']
-            player_1_result_object[0].games_drawn += match['draws']
-        elif match['player_1_wins'] < match['player_2_wins']:
-            player_2_result_object[0].points += 3
-            player_2_result_object[0].matches_won += 1
-            player_2_result_object[0].games_won += match['player_2_wins']
-            player_2_result_object[0].games_drawn += match['draws']
-        else:
-            player_1_result_object[0].points += 1
-            player_2_result_object[0].points += 1
-            player_1_result_object[0].games_won += match['player_1_wins']
-            player_1_result_object[0].games_drawn += match['draws']
-            player_2_result_object[0].games_won += match['player_2_wins']
-            player_2_result_object[0].games_drawn += match['draws']
         # TODO: create a proper response data
     db.session.commit()
-    response_data = ["All ok"]
+    tournament_result_objects = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
+    response_data = swiss_manager.create_tournament_ranking(tournament_results=tournament_result_objects)
+    return response_data
+
+
+# Function for get_current_ranking()
+def get_current_ranking(tournament_id: int, tournament_result_table: sqlalchemy.Model):
+    tournament_result = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
+    response_data = swiss_manager.create_tournament_ranking(tournament_results=tournament_result)
     return response_data
 
 
