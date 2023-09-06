@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, event
 
 
 db = SQLAlchemy()
@@ -52,8 +52,8 @@ class Result(db.Model):
     __tablename__ = 'result'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     match_id = db.Column(db.Integer, ForeignKey('match.id'), nullable=False)
-    player_1_id = db.Integer(db.Integer, ForeignKey('player.id'), nullable=True)
-    player_2_id = db.Integer(db.Integer, ForeignKey('player.id'), nullable=True)
+    player_1_id = db.Column(db.Integer, ForeignKey('player.id'), nullable=True)
+    player_2_id = db.Column(db.Integer, ForeignKey('player.id'), nullable=True)
     player_1_wins = db.Column(db.Integer, unique=False, nullable=False)
     player_2_wins = db.Column(db.Integer, unique=False, nullable=False)
     draws = db.Column(db.Integer, unique=False, nullable=False)
@@ -73,3 +73,16 @@ class TournamentResult(db.Model):
     matches_won = db.Column(db.Integer, unique=False, nullable=True)
     matches_drawn = db.Column(db.Integer, unique=False, nullable=True)
     games_won = db.Column(db.Integer, unique=False, nullable=True)
+    games_drawn = db.Column(db.Integer, unique=False, nullable=True)
+
+
+# Event listener to update TournamentResult after Result
+@event.listens_for(Result, 'after_insert')
+def result_after_insert(mapper, connection, target):
+    new_results = target
+
+
+def process_results(new_results):
+    updates = {
+
+    }

@@ -1,6 +1,6 @@
 import flask_functions
 from flask import Flask, jsonify
-from models import Player, Tournament, Match, db
+from models import Player, Tournament, Match, TournamentResult, Result, db
 import swiss_manager
 
 app = Flask(__name__)
@@ -52,23 +52,25 @@ def add_players():
 
 
 # Get pairings for the first round
-@app.route('/tournaments/<int:tournament_id>/rounds/start', methods=['GET'])
+@app.route('/tournaments/<int:tournament_id>/rounds/start', methods=['GET', 'POST'])
 def first_round(tournament_id):
     try:
         response_data = flask_functions.create_first_round(db=db, tournament_table=Tournament,
                                                            tournament_id=tournament_id, match_table=Match,
-                                                           player_table=Player)
+                                                           player_table=Player,
+                                                           tournament_result_table=TournamentResult)
         return jsonify(response_data), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
 # Save round results
-@app.route('/tournaments/<int:tournament_id>/rounds/<int:round_number>', methods=['POST'])
+@app.route('/tournaments/<int:tournament_id>/rounds/<int:round_number>', methods=['POST', 'PUT'])
 def post_results(tournament_id, round_number):
     try:
-
-        return None
+        response_data = flask_functions.save_round_results(db=db, tournament_id=tournament_id, player_table=Player,
+                                                           result_table=Result, tournament_result_table=TournamentResult)
+        return jsonify(response_data), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -98,16 +100,6 @@ def get_tournament_name_and_players(tournament_id):
                         'players': players}), 200
     else:
         return jsonify({'error': 'tournament not found'}), 404
-
-
-# Populate PlayersAndTournament at the tournament start (url to be updated)
-# @app.route('/tournaments/start', methods=['POST'])
-# def start_tournament():
-#     try:
-#         response_data = flask_functions.add_players_to_tournament_db(db=db, model=PlayersAndTournaments)
-#         return jsonify(response_data), 201
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
 
 
 if __name__ == '__main__':
