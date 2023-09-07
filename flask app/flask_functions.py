@@ -1,5 +1,6 @@
 from flask import request
 from flask_sqlalchemy import SQLAlchemy
+from pprint import pprint
 import swiss_manager
 
 sqlalchemy = SQLAlchemy()
@@ -112,8 +113,7 @@ def create_first_round(db: sqlalchemy, tournament_table: sqlalchemy.Model, match
         db.session.add(match)
         for player in pairings[i]:
             if player != "Bye":
-                query_for_player = player_table.query.filter_by(name=player)
-                player_object = query_for_player.first()
+                player_object = player_table.query.get(player['id'])
                 match.players.append(player_object)
         match_data = {
             'match_id': match.id,
@@ -136,7 +136,7 @@ def get_players_in_tournament(tournament_table: sqlalchemy.Model, tournament_id:
     player_objects = tournament.players
     players = []
     for player_object in player_objects:
-        player = player_object.name
+        player = {'name': player_object.name, 'id': player_object.id}
         players.append(player)
     return players
 
@@ -148,67 +148,99 @@ def save_round_results(db: sqlalchemy, tournament_id: int, player_table: sqlalch
     Saves matches results into the Result table and updates the TournamentResult rows
     """
     round_data = request.get_json()
+    tournament_result_objects = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
     for match in round_data:
         match_data = result_table(
             match_id=match['match_id'],
-            player_1_id=match['player_1_id'],
-            player_2_id=match['player_2_id'],
-            player_1_wins=match['player_1_wins'],
-            player_2_wins=match['player_2_wins'],
-            draws=match['draws']
+            player_1_id=match['player_1']['id'],
+            player_2_id=match['player_2']['id'],
+            player_1_wins=match['player_1']['wins'],
+            player_2_wins=match['player_2']['wins'],
+            draws=match['player_1']['draws']
         )
         db.session.add(match_data)
         # TODO move this block of horrible code to a different module
-        if match['player_2_id'] is not None:
-            player_1_object = player_table.query.get(match['player_1_id'])
-            player_2_object = player_table.query.get(match['player_2_id'])
-            tournament_result_objects = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
+        if match['player_2']['id'] is not None:
+            player_1_object = player_table.query.get(match['player_1']['id'])
+            player_2_object = player_table.query.get(match['player_2']['id'])
             player_1_result_object = [item for item in tournament_result_objects
                                       if item.player_id == player_1_object.id]
             player_2_result_object = [item for item in tournament_result_objects
                                       if item.player_id == player_2_object.id]
-            if match['player_1_wins'] > match['player_2_wins']:
+            if match['player_1']['wins'] > match['player_2']['wins']:
                 player_1_result_object[0].points += 3
                 player_1_result_object[0].matches_won += 1
-                player_1_result_object[0].games_won += match['player_1_wins']
-                player_1_result_object[0].games_drawn += match['draws']
-                player_2_result_object[0].games_won += match['player_2_wins']
-                player_2_result_object[0].games_drawn += match['draws']
-            elif match['player_1_wins'] < match['player_2_wins']:
+                player_1_result_object[0].games_won += match['player_1']['wins']
+                player_1_result_object[0].games_drawn += match['player_1']['draws']
+                player_2_result_object[0].games_won += match['player_2']['wins']
+                player_2_result_object[0].games_drawn += match['player_1']['draws']
+            elif match['player_1']['wins'] < match['player_2']['wins']:
                 player_2_result_object[0].points += 3
                 player_2_result_object[0].matches_won += 1
-                player_2_result_object[0].games_won += match['player_2_wins']
-                player_2_result_object[0].games_drawn += match['draws']
-                player_1_result_object[0].games_won += match['player_1_wins']
-                player_1_result_object[0].games_drawn += match['draws']
+                player_2_result_object[0].games_won += match['player_2']['wins']
+                player_2_result_object[0].games_drawn += match['player_1']['draws']
+                player_1_result_object[0].games_won += match['player_1']['wins']
+                player_1_result_object[0].games_drawn += match['player_1']['draws']
             else:
                 player_1_result_object[0].points += 1
                 player_2_result_object[0].points += 1
                 player_1_result_object[0].matches_drawn += 1
                 player_2_result_object[0].matches_drawn += 1
-                player_1_result_object[0].games_won += match['player_1_wins']
-                player_1_result_object[0].games_drawn += match['draws']
-                player_2_result_object[0].games_won += match['player_2_wins']
-                player_2_result_object[0].games_drawn += match['draws']
+                player_1_result_object[0].games_won += match['player_1']['wins']
+                player_1_result_object[0].games_drawn += match['player_1']['draws']
+                player_2_result_object[0].games_won += match['player_2']['wins']
+                player_2_result_object[0].games_drawn += match['player_1']['draws']
         else:
-            player_1_object = player_table.query.get(match['player_1_id'])
-            tournament_result_objects = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
+            player_1_object = player_table.query.get(match['player_1']['id'])
             player_1_result_object = [item for item in tournament_result_objects if
                                       item.player_id == player_1_object.id]
             player_1_result_object[0].points += 3
             player_1_result_object[0].matches_won += 1
-            player_1_result_object[0].games_won += match['player_1_wins']
-        # TODO: create a proper response data
+            player_1_result_object[0].games_won += match['player_2']['wins']
     db.session.commit()
     tournament_result_objects = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
-    response_data = swiss_manager.create_tournament_ranking(tournament_results=tournament_result_objects)
+    response_data = swiss_manager.create_tournament_ranking(tournament_results=tournament_result_objects,
+                                                            player_table=player_table)
+    return response_data
+
+
+# Function for get_round_pairings()
+def get_round_pairings(db, tournament_id: int, tournament_result_table: sqlalchemy.Model,
+                       player_table: sqlalchemy.Model, match_table: sqlalchemy.Model, round_number: int):
+    tournament_results = tournament_result_table.query.filter_by(tournament_id=tournament_id)
+    pairings = swiss_manager.create_pairings(tournament_results=tournament_results, player_table=player_table)
+    response_data = []
+    for i in range(len(pairings)):
+        match = match_table(
+            tournament_id=tournament_id,
+            round_number=round_number,
+            table_number=i+1
+        )
+        db.session.add(match)
+        for player in pairings[i]:
+            if player != "Bye":
+                player_object = player_table.query.get(player['id'])
+                match.players.append(player_object)
+        match_data = {
+            'id': match.id,
+            'round': match.round_number,
+            'table_number': i + 1,
+            'player_1': pairings[i][0],
+            'player_2': pairings[i][1]
+        }
+        response_data.append(match_data)
+    db.session.commit()
     return response_data
 
 
 # Function for get_current_ranking()
-def get_current_ranking(tournament_id: int, tournament_result_table: sqlalchemy.Model):
+def get_current_ranking(tournament_id: int, tournament_result_table: sqlalchemy.Model, player_table: sqlalchemy.Model):
+    """
+    Get current tournament rankings
+    """
     tournament_result = tournament_result_table.query.filter_by(tournament_id=tournament_id).all()
-    response_data = swiss_manager.create_tournament_ranking(tournament_results=tournament_result)
+    response_data = swiss_manager.create_tournament_ranking(tournament_results=tournament_result,
+                                                            player_table=player_table)
     return response_data
 
 
@@ -219,9 +251,7 @@ def create_tournament_result_rows(db: sqlalchemy, tournament_id: int, tournament
     Creates rows in the TournamentResult table for each player and sets results values to 0
     """
     for player in player_list:
-        player_query = player_table.query.filter_by(name=player)
-        player_object = player_query.first()
-        player_id = player_object.id
+        player_id = player['id']
         player_tour_result = tournament_result_table(
             tournament_id=tournament_id,
             player_id=player_id,

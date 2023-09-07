@@ -81,7 +81,21 @@ def post_results(tournament_id, round_number):
 def get_current_ranking(tournament_id):
     try:
         response_data = flask_functions.get_current_ranking(tournament_id=tournament_id,
-                                                            tournament_result_table=TournamentResult)
+                                                            tournament_result_table=TournamentResult,
+                                                            player_table=Player)
+        return jsonify(response_data), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+# Get round pairings (not first)
+@app.route('/tournaments/<int:tournament_id>/rounds/<int:round_number>', methods=['GET'])
+def get_round_pairings(tournament_id, round_number):
+    try:
+        response_data = flask_functions.get_round_pairings(db=db, tournament_id=tournament_id,
+                                                           tournament_result_table=TournamentResult,
+                                                           player_table=Player, match_table=Match,
+                                                           round_number=round_number)
         return jsonify(response_data), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
