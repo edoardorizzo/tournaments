@@ -246,7 +246,7 @@ def get_current_ranking(tournament_id: int, tournament_result_table: sqlalchemy.
 
 # Function to create rows into TournamentResult
 def create_tournament_result_rows(db: sqlalchemy, tournament_id: int, tournament_result_table: sqlalchemy.Model,
-                                  player_table: sqlalchemy.Model, player_list: list) -> None:
+                                  player_list: list) -> None:
     """
     Creates rows in the TournamentResult table for each player and sets results values to 0
     """
@@ -265,34 +265,13 @@ def create_tournament_result_rows(db: sqlalchemy, tournament_id: int, tournament
     db.session.commit()
 
 
-# # # - - - # # # - - - # # # - - - # # # - - - # # # - - - # # # - - - # # # - - - # # # - - #
-# All the following functions are working but not actually implemented into the app for now - #
-# # # - - - # # # - - - # # # - - - # # # - - - # # # - - - # # # - - - # # # - - - # # # - - #
-
-def add_players_to_tournament_db(db, model):
-    tournament = request.get_json()
-    player_names = tournament['player_names']
-    response_data = []
-    for player_name in player_names:
-        player = model(
-            tournament=tournament['tournament'],
-            player=player_name
-        )
-        db.session.add(player)
-        db.session.commit()
-        player_response = {
-            'id': player.id,
-            'tournament': player.tournament,
-            'players': player.player
-        }
-        response_data.append(player_response)
-    return response_data
-
-
-# Function for create_tournaments()
-def create_tournament(db, model):
+# Function to create an empty tournament currently with no purpose
+def create_tournament(db: sqlalchemy, tournament_table: sqlalchemy.Model):
+    """
+    Creates a tournament row in Tournament table
+    """
     tournament_data = request.get_json()
-    tournament = model(
+    tournament = tournament_table(
         name=tournament_data['name'],
         date=tournament_data['date']
     )
@@ -303,33 +282,4 @@ def create_tournament(db, model):
         'name': tournament.name,
         'date': tournament.date
     }
-    return response_data
-
-
-# Function for add_rounds()
-def add_rounds_to_db(db, model):
-    round_data = request.get_json()
-    response_data = []
-    for round_match in round_data:
-        match = model(
-            tournament=round_match['tournament'],
-            round_number=round_match['round_number'],
-            player1=round_match['player1'],
-            player2=round_match['player2'],
-            player1_result=round_match['player1_result'],
-            player2_result=round_match['player2_result']
-        )
-        db.session.add(match)
-        resp_data = {
-            # this way the id here is Null, better move this outside this for loop
-            'id': match.id,
-            'tournament': match.tournament,
-            'round_number': match.round_number,
-            'player1': match.player1,
-            'player2': match.player2,
-            'player1_result': match.player1_result,
-            'player2_result': match.player2_result
-        }
-        response_data.append(resp_data)
-    db.session.commit()
     return response_data
