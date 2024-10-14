@@ -10,9 +10,8 @@ import InputPlayerDelete from "../components/InputPlayerDelete";
 import userIcon from "../assets/img/user-solid.svg";
 
 function TournamentNamePage() {
-  const [tournament, setTournamentName] = useState(""); // Stato per il nome del torneo
-  const [players, setPlayerNames] = useState(["", ""]); // Stato per i nomi dei giocatori
-
+  const [tournament, setTournamentName] = useState(""); 
+  const [players, setPlayerNames] = useState(["", ""]); 
   const [clickCount, setClickCount] = useState(1);
   const [addedPlayers, setAddedPlayers] = useState([]);
 
